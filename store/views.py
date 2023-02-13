@@ -1,10 +1,18 @@
 from django.shortcuts import render
 from .models import *
+from django.core.paginator import Paginator
 
 
 def store(request):
-    products = Product.objects.all()
-    context = {'products': products}
+    # products = Product.objects.order_by('name')
+    p = Paginator(Product.objects.order_by('name'), 1)
+    page = request.GET.get('page')
+    products = p.get_page(page)
+    # img = products.productimage_set.first.image()
+    # page_count = products.paginator.num_pages
+    dummy = "a" * products.paginator.num_pages
+    context = {'products': products,
+               'dummy': dummy}
     return render(request, 'store/store.html', context)
 
 
